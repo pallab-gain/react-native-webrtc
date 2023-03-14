@@ -129,8 +129,10 @@ def setup(target_dir, platform):
     if platform == 'android':
         webrtc_dir = os.path.join(target_dir, 'webrtc', platform, 'src')
         os.chdir(webrtc_dir)
-        sh('./build/install-build-deps.sh')
+        # checkout M106 branch
+        sh('git checkout -b build-M106 refs/remotes/branch-heads/5249')
 
+        sh('./build/install-build-deps.sh')
 
 def sync(target_dir, platform):
     build_dir = os.path.join(target_dir, 'build', platform)
@@ -169,7 +171,7 @@ def build(target_dir, platform, debug):
 
     # Prepare environment
     env = os.environ.copy()
-    path_parts = [env['PATH'], depot_tools_dir]
+    path_parts = [env['PATH'], depot_tools_dir, '/root/ninja']
     if platform == 'android':
         # Same as . build/android/envsetup.sh
         android_sdk_root = os.path.join(webrtc_dir, 'third_party/android_sdk/public')
